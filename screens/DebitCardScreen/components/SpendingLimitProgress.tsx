@@ -4,24 +4,30 @@ import * as Progress from "react-native-progress";
 import { MonoText } from "../../../components/StyledText";
 import colors from "../../../constants/Colors";
 import { formatCurrency } from "../../../utils";
+import { ISpendingLimitProgressProps } from "../types";
 
-const money = 5000;
+export default function SpendingLimitProgress({
+  spentAmount,
+  spendingLimit,
+}: ISpendingLimitProgressProps) {
+  const progress = +(spentAmount / spendingLimit).toFixed(1);
 
-export default function SpendingLimitProgress() {
   return (
     <View style={styles.spendingLimitProgress}>
       <View style={{ flexDirection: "row", marginBottom: 8 }}>
         <MonoText style={styles.label}>Debit card spending limit</MonoText>
         <View style={{ flexDirection: "row" }}>
-          <MonoText style={styles.spent}>{formatCurrency(money)}</MonoText>
+          <MonoText style={styles.spent}>
+            {formatCurrency(spentAmount)}
+          </MonoText>
           <MonoText style={styles.divider}>|</MonoText>
           <MonoText style={styles.spendingLimit}>
-            {formatCurrency(money)}
+            {formatCurrency(spendingLimit)}
           </MonoText>
         </View>
       </View>
       <Progress.Bar
-        progress={0.3}
+        progress={progress}
         color={colors.green}
         unfilledColor="rgba(1, 209, 103, 0.1)"
         borderWidth={0}

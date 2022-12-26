@@ -3,17 +3,11 @@ import { Dimensions, Image, Pressable, StyleSheet, View } from "react-native";
 import colors from "../../../constants/Colors";
 import { chunkString } from "../../../utils";
 import { MonoText } from "../../../components/StyledText";
-
-const cardNumber = "5647341124132020";
+import { ICardNumberProps, IDebitCardInfoProps } from "../types";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-type CardProps = {
-  cardNumber: string;
-  show: boolean;
-};
-
-const CardNumber = ({ cardNumber, show }: CardProps) => {
+const CardNumber = ({ cardNumber, show }: ICardNumberProps) => {
   const chunked = chunkString(cardNumber, 4);
   return (
     <View style={styles.cardNumberContainer}>
@@ -51,7 +45,8 @@ const CardNumber = ({ cardNumber, show }: CardProps) => {
   );
 };
 
-export default function DebitCard() {
+export default function DebitCard({ debitCardInfo }: IDebitCardInfoProps) {
+  const { cardName, cardNumber, cardThru, cardCVV } = debitCardInfo;
   const [show, setShow] = useState(false);
 
   const showIcon = show
@@ -71,12 +66,12 @@ export default function DebitCard() {
         />
 
         <View style={{ flex: 1 }}>
-          <MonoText style={styles.cardOwner}>Mark Henry</MonoText>
+          <MonoText style={styles.cardOwner}>{cardName}</MonoText>
           <CardNumber cardNumber={cardNumber} show={show} />
           <View style={styles.cardInfoContainer}>
             <View style={styles.cardInfoContainer}>
               <MonoText style={styles.cardInfo}>
-                Thru: <MonoText style={styles.cardInfoVal}>12/20</MonoText>
+                Thru: <MonoText style={styles.cardInfoVal}>{cardThru}</MonoText>
               </MonoText>
             </View>
 
@@ -85,7 +80,7 @@ export default function DebitCard() {
                 CVV:{" "}
               </MonoText>
               {show ? (
-                <MonoText style={styles.cardInfoVal}>456</MonoText>
+                <MonoText style={styles.cardInfoVal}>{cardCVV}</MonoText>
               ) : (
                 <MonoText style={styles.cardHiddenInfo}>***</MonoText>
               )}

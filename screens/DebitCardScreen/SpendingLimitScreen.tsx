@@ -1,10 +1,10 @@
 import {
   Dimensions,
+  Keyboard,
   Pressable,
   StyleSheet,
-  Text,
   TextInput,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import colors from "../../constants/Colors";
@@ -25,7 +25,8 @@ export default function SpendingLimitScreen() {
   const [spendingLimitLabel, setSpendingLimitLabel] = useState("");
 
   const spendingLimitOnChange = (value: string) => {
-    const number = +value.replaceAll(",", "");
+    const number = +value.replace(/[,]+/g, "");
+    if (number > 999999999999999 || isNaN(number)) return;
     const formatted = formatCurrency(number, false);
 
     setSpendingLimit(number);
@@ -36,92 +37,108 @@ export default function SpendingLimitScreen() {
     spendingLimitOnChange(value);
   };
 
-  return (
-    <View style={styles.container}>
-      <View
-        style={{
-          flex: 1,
-          width: "100%",
-          backgroundColor: colors["white-1"],
-          borderTopLeftRadius: 24,
-          borderTopRightRadius: 24,
-          marginTop: 29,
-          paddingHorizontal: 24,
-          paddingTop: 32,
-          paddingBottom: 24,
-        }}
-      >
-        <View style={{ flex: 1 }}>
-          <View style={{ flexDirection: "row" }}>
-            <LimitSmall />
-            <MonoText style={{ marginLeft: 12 }}>
-              Set a weekly debit card spending limit
-            </MonoText>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              borderBottomWidth: 0.5,
-              borderBottomColor: colors["gray-2"],
-              marginBottom: 12,
-            }}
-          >
-            <BalancePrefix />
-            <TextInput
-              keyboardType="number-pad"
-              style={{ flex: 1, height: 40, fontSize: 24, fontWeight: "bold" }}
-              onChangeText={spendingLimitOnChange}
-              value={spendingLimitLabel}
-            />
-          </View>
-          <MonoText
-            style={{ fontSize: 13, color: "#22222266", marginBottom: 32 }}
-          >
-            Here weekly means the last 7 days - not the calendar week
-          </MonoText>
+  const handleSubmit = () => {
+    console.log("spendingLimit", spendingLimit);
+  };
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            {suggestCards.map((amount, i) => {
-              const formatted = formatCurrency(amount, false);
-              return (
-                <Pressable
-                  onPress={() => suggestCardOnPress(formatted)}
-                  key={i}
-                  style={{
-                    width: suggestCardWidth,
-                    height: 40,
-                    backgroundColor: "rgba(32, 209, 103, 0.07)",
-                    borderRadius: 4,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <MonoText
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <View
+          style={{
+            flex: 1,
+            width: "100%",
+            backgroundColor: colors["white-1"],
+            borderTopLeftRadius: 24,
+            borderTopRightRadius: 24,
+            marginTop: 29,
+            paddingHorizontal: 24,
+            paddingTop: 32,
+            paddingBottom: 24,
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: "row" }}>
+              <LimitSmall />
+              <MonoText style={{ marginLeft: 12 }}>
+                Set a weekly debit card spending limit
+              </MonoText>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                borderBottomWidth: 0.5,
+                borderBottomColor: colors["gray-2"],
+                marginBottom: 12,
+              }}
+            >
+              <BalancePrefix />
+              <TextInput
+                autoFocus={true}
+                keyboardType="numeric"
+                style={{
+                  flex: 1,
+                  height: 40,
+                  fontSize: 24,
+                  fontWeight: "bold",
+                }}
+                onChangeText={spendingLimitOnChange}
+                value={spendingLimitLabel}
+              />
+            </View>
+            <MonoText
+              style={{ fontSize: 13, color: "#22222266", marginBottom: 32 }}
+            >
+              Here weekly means the last 7 days - not the calendar week
+            </MonoText>
+
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              {suggestCards.map((amount, i) => {
+                const formatted = formatCurrency(amount, false);
+                return (
+                  <Pressable
+                    onPress={() => suggestCardOnPress(formatted)}
+                    key={i}
                     style={{
-                      fontSize: 12,
-                      fontWeight: "600",
-                      color: colors.green,
+                      width: suggestCardWidth,
+                      height: 40,
+                      backgroundColor: "rgba(32, 209, 103, 0.07)",
+                      borderRadius: 4,
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                   >
-                    S$ {formatted}
-                  </MonoText>
-                </Pressable>
-              );
-            })}
+                    <MonoText
+                      style={{
+                        fontSize: 12,
+                        fontWeight: "600",
+                        color: colors.green,
+                      }}
+                    >
+                      S$ {formatted}
+                    </MonoText>
+                  </Pressable>
+                );
+              })}
+            </View>
           </View>
+          <Pressable
+            style={styles.saveBtn}
+            onPress={handleSubmit}
+            disabled={!spendingLimit}
+          >
+            <MonoText style={styles.saveBtnLabel}>Save</MonoText>
+          </Pressable>
         </View>
-        <Pressable style={styles.saveBtn}>
-          <MonoText style={styles.saveBtnLabel}>Save</MonoText>
-        </Pressable>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 

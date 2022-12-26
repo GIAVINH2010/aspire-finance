@@ -14,18 +14,42 @@ import LimitIcon from "../../../assets/images/limit.svg";
 import FreezeIcon from "../../../assets/images/freeze.svg";
 import NewCardIcon from "../../../assets/images/new-card.svg";
 import DeactivateIcon from "../../../assets/images/deactivate.svg";
+import { IDebitCardUltilitiesProps } from "../types";
 
-export default function CardUltilities() {
+export default function CardUltilities({
+  debitCard,
+}: IDebitCardUltilitiesProps) {
+  const {
+    info: debitCardInfo,
+    isSetSpendingLimit,
+    spentAmount,
+    spendingLimit,
+  } = debitCard;
   const navigation = useNavigation();
-  const [isSpendingLimit, setIsSpendingLimit] = useState(false);
+  const [isSpendingLimit, setIsSpendingLimit] = useState(isSetSpendingLimit);
+
+  const isSpendingLimitOnChange = (value: boolean) => {
+    if (isSpendingLimit && !value) {
+      setIsSpendingLimit(false);
+    } else {
+      navigation.navigate("SpendingLimit");
+    }
+  };
   return (
     <BottomSheet>
       <>
         <View style={styles.cardContainer}>
-          <DebitCard />
+          <DebitCard debitCardInfo={debitCardInfo} />
         </View>
         <View style={{ paddingVertical: 32 }}>
-          {isSpendingLimit ? <SpendingLimitProgress /> : <></>}
+          {isSpendingLimit ? (
+            <SpendingLimitProgress
+              spentAmount={spentAmount}
+              spendingLimit={spendingLimit}
+            />
+          ) : (
+            <></>
+          )}
           <View style={styles.utilContainer}>
             <TopupIcon />
             <View style={styles.utilTitleContainer}>
@@ -48,7 +72,7 @@ export default function CardUltilities() {
               </View>
               <Switch
                 value={isSpendingLimit}
-                onValueChange={(val) => setIsSpendingLimit(val)}
+                onValueChange={isSpendingLimitOnChange}
                 renderActiveText={false}
                 renderInActiveText={false}
                 circleSize={16}
