@@ -1,5 +1,22 @@
 # Aspire Financial Service
 
+## Prerequisite
+
+- Node v16.14.2
+- Yarn v1.22.18 
+
+## Installation
+
+```
+yarn
+```
+
+## Usage
+
+```
+yarn start
+```
+
 ## About project 💁‍♂️
 
 Aspire Financial Service is a modile code challenge
