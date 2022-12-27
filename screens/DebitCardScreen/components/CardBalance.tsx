@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import { MonoText } from "../../../components/StyledText";
 import colors from "../../../constants/Colors";
-import { formatCurrency } from "../../../utils";
+import { formatThounsand } from "../../../utils";
 import { CardBalanceProps } from "../types";
 import BalancePrefix from "./BalancePrefix";
 
@@ -12,7 +12,7 @@ export default function CardBalance({ balance }: CardBalanceProps) {
       <View style={styles.balance}>
         <BalancePrefix />
         <MonoText style={styles.balanceVal}>
-          {formatCurrency(balance, false)}
+          {formatThounsand(balance)}
         </MonoText>
       </View>
     </View>

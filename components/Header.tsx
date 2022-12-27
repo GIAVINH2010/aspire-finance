@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   container: {
     position: "relative",
     paddingHorizontal: 24,
-    // paddingBottom: 16,
+    paddingBottom: 16,
     backgroundColor: Colors["blue-1"],
   },
   title: {

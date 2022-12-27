@@ -13,15 +13,14 @@ interface IDebitCardInfo {
   cardCVV: string;
 }
 
-export interface IDebitState extends IDebitCard {
-  id: number;
+export interface IDebitState {
+  debitCard: IDebitCard;
 }
 
-export type CardBalanceProps = Pick<IDebitState, "balance">;
+export type CardBalanceProps = Pick<IDebitCard, "balance">;
 
-export interface IDebitCardUltilitiesProps {
-  debitCard: IDebitState;
-}
+export interface IDebitCardUltilitiesProps
+  extends Pick<IDebitState, "debitCard"> {}
 
 export interface IDebitCardInfoProps {
   debitCardInfo: IDebitCardInfo;
@@ -36,3 +35,5 @@ export interface ISpendingLimitProgressProps {
   spentAmount: number;
   spendingLimit: number;
 }
+
+export interface IDebitCardPayload extends IDebitCard {}

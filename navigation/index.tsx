@@ -17,7 +17,7 @@ import {
   BottomTabParamList,
   RootBottomTabScreenProps,
   DebitStackParamList,
-} from "../types";
+} from "./types";
 
 import DebitCardScreen from "../screens/DebitCardScreen";
 import HomeScreen from "../screens/HomeScreen";

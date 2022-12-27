@@ -1,3 +1,4 @@
+import { useLayoutEffect, useState } from "react";
 import {
   Dimensions,
   Keyboard,
@@ -7,12 +8,19 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import colors from "../../constants/Colors";
-import LimitSmall from "../../assets/images/limit-small.svg";
+import { useNavigation } from "@react-navigation/native";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+
 import { MonoText } from "../../components/StyledText";
 import BalancePrefix from "./components/BalancePrefix";
-import { useState } from "react";
-import { formatCurrency } from "../../utils";
+import LimitSmall from "../../assets/images/limit-small.svg";
+
+import { IDebitCardPayload } from "./types";
+import colors from "../../constants/Colors";
+
+import { setSpendingLimitThunk } from "./thunks";
+
+import { formatThounsand } from "../../utils";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -21,13 +29,26 @@ const suggestCardWidth = SCREEN_WIDTH / 3.7;
 const suggestCards = [5000, 10000, 20000];
 
 export default function SpendingLimitScreen() {
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation();
+
+  const { debitCard } = useAppSelector((state) => state.debit);
+
   const [spendingLimit, setSpendingLimit] = useState(0);
   const [spendingLimitLabel, setSpendingLimitLabel] = useState("");
+
+  useLayoutEffect(() => {
+    const { spendingLimit } = debitCard;
+    const formatted = formatThounsand(spendingLimit);
+
+    setSpendingLimit(spendingLimit);
+    setSpendingLimitLabel(+formatted === 0 ? "" : formatted);
+  }, []);
 
   const spendingLimitOnChange = (value: string) => {
     const number = +value.replace(/[,]+/g, "");
     if (number > 999999999999999 || isNaN(number)) return;
-    const formatted = formatCurrency(number, false);
+    const formatted = formatThounsand(number);
 
     setSpendingLimit(number);
     setSpendingLimitLabel(+formatted === 0 ? "" : formatted);
@@ -38,7 +59,13 @@ export default function SpendingLimitScreen() {
   };
 
   const handleSubmit = () => {
-    console.log("spendingLimit", spendingLimit);
+    const payload: IDebitCardPayload = {
+      ...debitCard,
+      isSetSpendingLimit: true,
+      spendingLimit,
+    };
+    dispatch(setSpendingLimitThunk(payload));
+    navigation.navigate("Debit");
   };
 
   return (
@@ -51,7 +78,7 @@ export default function SpendingLimitScreen() {
             backgroundColor: colors["white-1"],
             borderTopLeftRadius: 24,
             borderTopRightRadius: 24,
-            marginTop: 29,
+            marginTop: 8,
             paddingHorizontal: 24,
             paddingTop: 32,
             paddingBottom: 24,
@@ -101,7 +128,7 @@ export default function SpendingLimitScreen() {
               }}
             >
               {suggestCards.map((amount, i) => {
-                const formatted = formatCurrency(amount, false);
+                const formatted = formatThounsand(amount);
                 return (
                   <Pressable
                     onPress={() => suggestCardOnPress(formatted)}

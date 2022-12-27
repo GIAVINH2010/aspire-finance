@@ -1,4 +1,5 @@
 import { chunkString } from "./chunkString";
-import { formatCurrency } from "./formatCurrency";
+import { formatThounsand } from "./formatThounsand";
+import { axiosInstance } from "./axios";
 
-export { chunkString, formatCurrency };
+export { chunkString, formatThounsand, axiosInstance };

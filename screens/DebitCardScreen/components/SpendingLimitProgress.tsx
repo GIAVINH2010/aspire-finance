@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import * as Progress from "react-native-progress";
 
 import { MonoText } from "../../../components/StyledText";
 import colors from "../../../constants/Colors";
-import { formatCurrency } from "../../../utils";
+import { formatThounsand } from "../../../utils";
 import { ISpendingLimitProgressProps } from "../types";
 
 export default function SpendingLimitProgress({
@@ -18,11 +18,11 @@ export default function SpendingLimitProgress({
         <MonoText style={styles.label}>Debit card spending limit</MonoText>
         <View style={{ flexDirection: "row" }}>
           <MonoText style={styles.spent}>
-            {formatCurrency(spentAmount)}
+            ${formatThounsand(spentAmount)}
           </MonoText>
           <MonoText style={styles.divider}>|</MonoText>
           <MonoText style={styles.spendingLimit}>
-            {formatCurrency(spendingLimit)}
+            ${formatThounsand(spendingLimit)}
           </MonoText>
         </View>
       </View>

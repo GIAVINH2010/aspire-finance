@@ -7,19 +7,30 @@ import CardBalance from "./components/CardBalance";
 import CardUltilities from "./components/CardUltilities";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useEffect } from "react";
-import { getDebitCard } from "./reducer";
+import { fetchDebitCardThunk } from "./thunks";
+import { setViewHeight } from "../../store/appReducer";
 
 export default function DebitCardScreen() {
   const dispatch = useAppDispatch();
 
+  const { viewHeight } = useAppSelector((state) => state.app.screen);
+
   useEffect(() => {
-    dispatch(getDebitCard());
+    dispatch(fetchDebitCardThunk());
   }, []);
 
-  const debitCard = useAppSelector((state) => state.debit);
+  // @ts-ignore
+  const handleLayout = (event) => {
+    const { height } = event.nativeEvent.layout;
+    if (!viewHeight) {
+      dispatch(setViewHeight(height));
+    }
+  };
+
+  const { debitCard } = useAppSelector((state) => state.debit);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <View style={styles.container}>
+      <View style={styles.container} onLayout={handleLayout}>
         <CardBalance balance={debitCard.balance} />
         <CardUltilities debitCard={debitCard} />
       </View>

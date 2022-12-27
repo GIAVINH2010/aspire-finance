@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 
+import appReducer from "./appReducer";
 import debitReducer from "../screens/DebitCardScreen/reducer";
 
 export const store = configureStore({
   reducer: {
+    app: appReducer,
     debit: debitReducer,
   },
 });

@@ -1,4 +1,3 @@
-import { FontAwesome } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
@@ -14,7 +13,6 @@ export default function useCachedResources() {
 
         // Load fonts
         await Font.loadAsync({
-          ...FontAwesome.font,
           "avenir-regular": require("../assets/fonts/AvenirNextLTPro-Regular.otf"),
           "avenir-medium": require("../assets/fonts/AvenirNextLTPro-Medium.otf"),
           "avenir-bold": require("../assets/fonts/AvenirNextLTPro-Bold.otf"),
