@@ -17,6 +17,9 @@ yarn
 yarn start
 ```
 
+## Server
+The mock api server is hosted on EC2 http://3.1.206.208/
+
 ## About project 💁‍♂️
 
 Aspire Financial Service is a modile code challenge
